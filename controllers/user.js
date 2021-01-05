@@ -70,7 +70,8 @@ userRouter.post('/login', async (request, response, next) =>{
 
             try{
                 if (!user) {
-                    response.send({error: "invalid username or password"})
+                    response.status(401)
+                        .send({error: "invalid username or password"})
                     return;
                 }
 

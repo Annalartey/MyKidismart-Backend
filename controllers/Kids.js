@@ -9,16 +9,17 @@ const authentication = require("../middleware/authentication")
 kidsRouter.get('/', authentication.authenticateToken, (request,response,next) => {
     console.log("Fetching kids", request.user)
 
-    Kids.find({ parentId: request.user.id }).then(res => {
-        response.status(200).send(res)
+    Kids.find({ parentId: request.user.id }).then(foundKids => {
+        console.log("Found kids")
+        response.status(200).send(foundKids)
         next();
     })
 })
 
 
-kidsRouter.get('/', (req, res) => {
+// kidsRouter.get('/', (req, res) => {
     
-})
+// })
 
 
 // Rout to getkids with a specific parentId
@@ -40,20 +41,25 @@ kidsRouter.get('/:parentId', (request, response) => {
 
 
 // Route to post a new kid
-kidsRouter.post('/', async (request, response, next) =>{
+kidsRouter.post('/', authentication.authenticateToken, async (request, response, next) =>{
+    
+    console.log("Current logged in user", request.user)
     const {firstname, lastname, dateofbirth} = request.body;
 
 
     if (firstname && lastname && dateofbirth){
         const kidsCount = await Kids.countDocuments();
-
-        const newKids = new Kids ({
-            id:kidsCount + 1,
+        const newKidData = {
+            id: kidsCount + 1,
             firstname: firstname,
             lastname: lastname,
-            dateofbirth: dateofbirth
-        })
+            dateofbirth: dateofbirth,
+            parentId: request.user.id
+        }
 
+        console.log("New Kid data to add", newKidData)
+        
+        const newKids = new Kids(newKidData)
         newKids.save()
         .then (res =>{
             response.status(201).send(res);
