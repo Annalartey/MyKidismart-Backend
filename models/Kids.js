@@ -19,11 +19,6 @@ const kidsSchema =  new mongoose.Schema({
     dateofbirth:{
         type: Date,
         required: true
-    },
-
-    parentId:{
-        type: Number,
-        required: true
     }
 
 })

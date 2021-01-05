@@ -41,18 +41,17 @@ kidsRouter.get('/:parentId', (request, response) => {
 
 // Route to post a new kid
 kidsRouter.post('/', async (request, response, next) =>{
-    const {firstname, lastname, dateofbirth, parentId} = request.body;
+    const {firstname, lastname, dateofbirth} = request.body;
 
 
-    if (firstname && lastname && dateofbirth && parentId){
+    if (firstname && lastname && dateofbirth){
         const kidsCount = await Kids.countDocuments();
 
         const newKids = new Kids ({
             id:kidsCount + 1,
             firstname: firstname,
             lastname: lastname,
-            dateofbirth: dateofbirth,
-            parentId :parentId
+            dateofbirth: dateofbirth
         })
 
         newKids.save()

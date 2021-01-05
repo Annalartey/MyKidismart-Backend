@@ -41,22 +41,6 @@ app.use('/lesson', lessonRouter);
 
 
 
-// app.get("/", (req,res) => {
-//     res.send("Hello World")
-// })
-
-// app.get("/getWeather", (req,res) => {
-//     req("https://api.weatherbit.io/v2.0/current?city=Accra,Ghana&key=e79cffbc8cca4b9f8b34968c14db1d06",
-//     function(error,response,body){
-//         if(!error && response.statusCode==200){
-//             var parsedBody = JSON.parse(body)
-//             var temperature = parsedBody["data"][0]["temp"]
-//             res.send({temperature})
-//         }
-//     })
-    
-// })
-
 
 
 app.listen(port, () => console.log("Express app is listening"))

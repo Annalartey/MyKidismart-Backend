@@ -23,9 +23,9 @@ userRouter.post('/signup', async (request, response, next) =>{
 
 
     if (firstname && lastname && email && password && confirmpassword){
-        const userCount = await User.countDocuments();
+        const userCount = await Users.countDocuments();
 
-        const newUser = new User ({
+        const newUser = new Users ({
             id:userCount + 1,
             firstname: firstname,
             lastname: lastname,
