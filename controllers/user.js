@@ -1,12 +1,12 @@
 const userRouter = require('express').Router();
 // const {response} = require('express');
-const User = require('../models/user')
+const Users = require('../models/user')
 const authentication = require("../middleware/authentication")
 
 
 // Route to get all users
 userRouter.get('/', (request,response,next) => {
-    User.find({}).then(res => {
+    Users.find({}).then(res => {
         response.status(200).send(res)
         next();
     })
@@ -53,35 +53,39 @@ userRouter.post('/signup', async (request, response, next) =>{
 
 
 //Route to login a user
+userRouter.post('/login', async (request, response, next) =>{
+    const {email, password} = request.body;
 
- userRouter.post('/login', async (request, response, next) =>{
- const {firstname} = request.body.firstname;
-const {password} = request.body.password;
+    if (!email || !password) {
+        response.send({ error: "You must provide an email and a password" })
+        return
+    }
 
-if (firstname && password) {
-    await Users.findOne({firstname:firstname}).exec((error, user) => {
-        if (error) {
-            response.status(500).send({error: "INTERNAL SERVER ERROR"})
-        }
-        try{
-            const password = password
-            // bcrypt.compareSync(password, user.passwordHash)
-            if (password) {
-                response.send({message: "LOGGED IN"})
+    await Users.findOne({ email, password })
+        .exec((error, user) => {
+            if (error) {
+                response.status(500).send({error: "INTERNAL SERVER ERROR"})
+                return;
             }
-            else {
-                response.send({error: "invalid username or password"})
-            }
-        }
-        catch (exception) {
-            console.log(exception)
-            response.status(500).send({exception})
-        }
-    })
-}
 
-    //  const token = authentication.generateAccessToken(firstname, password)
-    //  res.status(200).send({ "message": "successful login!" ,token})
+            try{
+                if (!user) {
+                    response.send({error: "invalid username or password"})
+                    return;
+                }
+
+                const token = authentication.generateAccessToken(user.email)
+                response.status(200)
+                    .send({
+                        message: "successful login!",
+                        token
+                    })
+            } catch (exception) {
+                console.log(exception)
+                response.status(500)
+                    .send({exception})
+            }
+        })
 
  })
 

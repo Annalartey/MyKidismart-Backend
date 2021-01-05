@@ -1,12 +1,15 @@
 const kidsRouter = require('express').Router();
 // const {response} = require('express');
 const Kids = require('../models/kids')
+const authentication = require("../middleware/authentication")
 
 
 
 // Route to get all kids
-kidsRouter.get('/', (request,response,next) => {
-    Kids.find({}).then(res => {
+kidsRouter.get('/', authentication.authenticateToken, (request,response,next) => {
+    console.log("Fetching kids", request.user)
+
+    Kids.find({ parentId: request.user.id }).then(res => {
         response.status(200).send(res)
         next();
     })
