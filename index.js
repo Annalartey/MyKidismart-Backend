@@ -11,6 +11,7 @@ const cors = require('cors');
 const questionRouter = require('./controllers/question');
 const kidsRouter = require('./controllers/kids');
 const lessonRouter = require('./controllers/lesson');
+const remarkRouter = require('./controllers/remark');
 app.use(cors());
 app.use(express.json())
 
@@ -38,6 +39,7 @@ app.use('/user', userRouter);
 app.use('/question', questionRouter)
 app.use('/kids', kidsRouter);
 app.use('/lesson', lessonRouter);
+app.use('/remark', remarkRouter)
 
 
 
